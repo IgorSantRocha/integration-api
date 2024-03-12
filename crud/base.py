@@ -24,6 +24,9 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         self.model = model
 
     def get(self, db: Session, id: Any) -> Optional[ModelType]:
+        print()
+        print('Entrei no get')
+        print()
         return db.query(self.model).filter(self.model.id == id).first()
 
     def get_multi(
@@ -38,6 +41,12 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         db.commit()
         db.refresh(db_obj)
         return db_obj
+
+    def create_multi(self, db: Session, *, obj_in: List[CreateSchemaType]) -> List[ModelType]:
+        db_objs = [self.model(**jsonable_encoder(item)) for item in obj_in]
+        db.add_all(db_objs)
+        db.commit()
+        return db_objs
 
     def update(
             self,

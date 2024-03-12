@@ -1,5 +1,3 @@
-# TemplateFastAPI
-Esse template tem uma estrutura pronta para o fastapi, seguindo as melhores práticas de padrões de projeto.
+# Integração de API's
 
-Nele temos exemplos de como relalizar requests em outros endpoints, bem como configurações de logs, para plataformas de monitoramento.
-
+Aqui criaremos as rotas que farão a integração direta com as API's de nossos clientes.

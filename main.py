@@ -18,7 +18,7 @@ from fastapi.openapi.utils import get_openapi
 
 def api_factory():
     app = FastAPI(title=settings.PROJECT_NAME,
-                  root_path="/IntegrationSTN",
+                  root_path="/IntegrationAPI",
                   version='0.0.1',
                   description='Template para criação de APIs',
                   )
