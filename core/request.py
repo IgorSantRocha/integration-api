@@ -42,9 +42,11 @@ class RequestClient:
 
 
 class StnHomologRequestClient:
-    def __init__(self, method, headers: Any = None, request_data: dict = None, timeout: int = 100) -> None:
+    def __init__(self, method, headers: Any = None, request_data: dict = None, timeout: int = 100, chamado: str = None) -> None:
         self.method = method
         self.url = 'https://stonelog-homolog.stone.com.br/api/service-orders/'
+        if chamado:
+            self.url = 'https://stonelog-homolog.stone.com.br/api/service-orders/'+chamado
         self.request_data = request_data
         self.headers = {
             'token': 'stg_HhLAxez8FEMuGqxJrsrP7uhfXuvabnU37BzChjbHH6'}
