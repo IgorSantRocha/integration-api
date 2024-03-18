@@ -7,6 +7,7 @@ from sqlalchemy.sql import func
 
 class StnControleModel(Base):
     __tablename__ = 'TB_STN_Integration'
+
     id = Column("ID", Integer, primary_key=True)
     chamado_id = Column("CHAMADO_ID", Integer, ForeignKey('TB_Stone.ID'))
     criadoem = Column(DateTime, default=func.now())

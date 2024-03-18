@@ -1,5 +1,5 @@
 from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
-
+from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -34,6 +34,11 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     ) -> List[ModelType]:
         return db.query(self.model).order_by(getattr(self.model, order_by)).offset(skip).limit(limit).all()
 
+    def get_multi_filter(
+        self, db: Session, *, order_by: str = "id", filterby: str = "enviado", filter: str
+    ) -> List[ModelType]:
+        return db.query(self.model).order_by(getattr(self.model, order_by)).filter(getattr(self.model, filterby) == filter)
+
     def create(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:
         obj_in_data = jsonable_encoder(obj_in)
         db_obj = self.model(**obj_in_data)  # type: ignore
@@ -44,16 +49,18 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     def create_multi(self, db: Session, *, obj_in: List[CreateSchemaType]) -> List[ModelType]:
         db_objs = [self.model(**jsonable_encoder(item)) for item in obj_in]
-        db.add_all(db_objs)
+        db.bulk_save_objects(db_objs)
         db.commit()
-        return db_objs
+        print('multiplos...')
+
+        return {'msg': 'Chamados inseridos com sucesso'}
 
     def update(
-            self,
-            db: Session,
-            *,
-            db_obj: ModelType,
-            obj_in: Union[UpdateSchemaType, Dict[str, Any]]
+        self,
+        db: Session,
+        *,
+        db_obj: ModelType,
+        obj_in: Union[UpdateSchemaType, Dict[str, Any]]
     ) -> ModelType:
         obj_data = jsonable_encoder(db_obj)
         if isinstance(obj_in, dict):
@@ -66,7 +73,8 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         db.add(db_obj)
         db.commit()
         db.refresh(db_obj)
-        return db_obj
+        obj_data = jsonable_encoder(db_obj)
+        return obj_data
 
     def remove(self, db: Session, *, id: int) -> ModelType:
         obj = db.query(self.model).get(id)

@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 import httpx
 from opentelemetry.propagate import inject
 
@@ -30,6 +31,40 @@ class RequestClient:
                 request = httpx.Request(self.method.upper(), url=self.url,
                                         **{f"{'params' if self.method == 'get' else 'json'}": self.request_data},
                                         headers=self.headers)
+                response = await client.send(request)
+                response.raise_for_status()
+            except httpx.HTTPStatusError as exc:
+                await log_request_result('request_error', self.url, self.method, self.request_data, response)
+                raise exc
+
+            await log_request_result('request_success', self.url, self.method, self.request_data, response)
+            return response.json()
+
+
+class StnHomologRequestClient:
+    def __init__(self, method, headers: Any = None, request_data: dict = None, timeout: int = 100) -> None:
+        self.method = method
+        self.url = 'https://stonelog-homolog.stone.com.br/api/service-orders/'
+        self.request_data = request_data
+        self.headers = {
+            'token': 'stg_HhLAxez8FEMuGqxJrsrP7uhfXuvabnU37BzChjbHH6'}
+        if headers:
+            self.headers.update(headers)
+
+        self.timeout = timeout
+        inject(carrier=self.headers)
+
+    async def send_api_request(self):
+        logger.info(f"Sending a {self.method} request to: {self.url}")
+        logger.info(f"Request body/params: {self.request_data}")
+        logger.info(f"Request HEADERS: {self.headers}")
+
+        async with httpx.AsyncClient(timeout=self.timeout) as client:
+            try:
+                request = httpx.Request(self.method.upper(), url=self.url,
+                                        **{f"{'params' if self.method == 'get' else 'json'}": self.request_data},
+                                        headers=self.headers)
+                print(request)
                 response = await client.send(request)
                 response.raise_for_status()
             except httpx.HTTPStatusError as exc:
