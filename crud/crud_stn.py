@@ -5,8 +5,8 @@ from sqlalchemy.orm import Session
 from crud.base import CRUDBase
 from models.stn.stn_base_model import StnBaseEssentialModel
 from models.stn.stn_controle_model import StnControleModel
-from schemas.stn_base_schema import StnBaseUpdateStatusSC, StnBaseCreateSC
-from schemas.stn_controle_schema import StnControleCreateSC, StnControleUpdateSC, StnControleUpdateStatusDesejadoSC
+from schemas.stn.stn_base_schema import StnBaseUpdateStatusSC, StnBaseCreateSC
+from schemas.stn.stn_controle_schema import StnControleCreateSC, StnControleUpdateSC, StnControleUpdateStatusDesejadoSC
 
 
 class StnControleCRUDItem(CRUDBase[StnControleModel, StnControleCreateSC, StnControleUpdateSC]):

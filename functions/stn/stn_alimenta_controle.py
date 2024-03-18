@@ -4,8 +4,8 @@ from sqlalchemy.orm import sessionmaker
 from core.config import settings
 from crud.crud_stn import stn_controle, stn_base_essential
 from models.stn.stn_base_model import StnBaseEssentialModel
-from schemas.stn_base_schema import StnBaseInDbBaseSC
-from schemas.stn_controle_schema import StnControleCreateSC
+from schemas.stn.stn_base_schema import StnBaseInDbBaseSC
+from schemas.stn.stn_controle_schema import StnControleCreateSC
 from sqlalchemy.orm import Session
 '''
 Essa função tem como objetivo consultar a tabela da Stone

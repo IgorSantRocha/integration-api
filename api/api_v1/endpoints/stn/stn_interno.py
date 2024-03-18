@@ -4,10 +4,10 @@ import logging
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from api.deps import get_db
-from schemas.stn_controle_schema import StnControleSC
+from schemas.stn.stn_controle_schema import StnControleSC
 from crud.crud_stn import stn_controle, stn_base_essential
-from schemas.stn_controle_schema import StnControleCreateSC, StnControleUpdateStatusDesejadoSC
-from schemas.stn_base_schema import StnBaseInDbBaseSC
+from schemas.stn.stn_controle_schema import StnControleCreateSC, StnControleUpdateStatusDesejadoSC
+from schemas.stn.stn_base_schema import StnBaseInDbBaseSC
 
 
 router = APIRouter()
