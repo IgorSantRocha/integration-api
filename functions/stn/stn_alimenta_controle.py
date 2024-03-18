@@ -24,30 +24,29 @@ def cria_instancia_banco():
     return session
 
 
-def stn_consulta_base():
-    session = cria_instancia_banco()
-
-    casos_novos: list[StnBaseInDbBaseSC] = stn_base_essential.get_multi(  # type: ignore
-        db=session, limit=2)
-    # casos_novos: dict = stn_base_essential.get_multi_filter(
-    #   db=session, filterby='status', filter='NOVA')
-    stn_insere_chamados_no_controle(session, casos_novos)
-    return casos_novos
-
-
-def stn_insere_chamados_no_controle(db: Session, casos_novos: list[StnBaseEssentialModel]):
+def stn_insere_chamados_no_controle(db: Session, casos_novos: list[StnBaseEssentialModel], status_desejado: str):
     # monto a lista de dicionários a ser inserida
     lista_chamados = []
     for caso in casos_novos:
-        print(f"ID: {caso.id}, Status: {caso.status}")
-
         lista_chamados.append(StnControleCreateSC(
-            status_desejado='EM CAMPO',
+            status_desejado=status_desejado,
             chamado_id=caso.id
         ))
-    print(lista_chamados)
+
     stn_controle.create_multi(db=db, obj_in=lista_chamados)
 
+    return casos_novos
+
+
+def stn_consulta_base():
+    session = cria_instancia_banco()
+
+    casos_novos: list[StnBaseInDbBaseSC] = stn_base_essential.get_multi_filter_status(
+        db=session,
+        filter_list=['NOVA', 'RECEBIDA', 'REPIQUE'],
+    )
+    status_desejado = 'EM CAMPO'
+    stn_insere_chamados_no_controle(session, casos_novos, status_desejado)
     return casos_novos
 
 

@@ -5,6 +5,7 @@ from fastapi.encoders import jsonable_encoder
 from core.request import StnHomologRequestClient
 from schemas.request_body_schema import StnAlterSC, StnSucessoSC
 
+
 router = APIRouter()
 logger = logging.getLogger(__name__)
 

@@ -1,3 +1,4 @@
+from sqlalchemy import or_
 from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
@@ -36,7 +37,20 @@ stn_controle = StnControleCRUDItem(StnControleModel)
 
 
 class StnBaseCRUDItem(CRUDBase[StnBaseEssentialModel, StnBaseCreateSC, StnBaseUpdateStatusSC]):
-    pass
+    def get_multi_filter_status(
+        self, db: Session, order_by: str = "id", filter_list: List[str] = None, filterby: str = "enviado"
+    ) -> List[StnBaseEssentialModel]:
+        if filter_list is None:
+            filter_list = []
+        print(filter_list)
+        filters = [StnBaseEssentialModel.status ==
+                   filter_item for filter_item in filter_list]
+        if filters:
+            return db.query(self.model).order_by(getattr(self.model, order_by)).filter(
+                or_(*filters)
+            ).all()
+        else:
+            return db.query(self.model).order_by(getattr(self.model, order_by)).all()
 
 
 stn_base_essential = StnBaseCRUDItem(StnBaseEssentialModel)
