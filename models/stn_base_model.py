@@ -3,12 +3,17 @@ from sqlalchemy import Column, Integer, String, DateTime, Text
 from db.base_class import Base
 
 
-class StnBaseModel(Base):
+class StnBaseEssentialModel(Base):
     __tablename__ = 'TB_Stone'
-
     id = Column("ID", Integer, primary_key=True)
     chamado = Column("Chamado", String(35))
     status = Column("Status", String(20))
+    __table_args__ = {'extend_existing': True}
+
+
+class StnBaseModel(StnBaseEssentialModel):
+    __table_args__ = {'extend_existing': True}
+
     projeto = Column("Projeto", String(20))
     num_ref_operador_logístico = Column(
         "Num# Ref# Operador Logístico", String(20))

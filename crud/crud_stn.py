@@ -2,8 +2,9 @@ from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from crud.base import CRUDBase
-from models.stn_base_model import StnBaseModel
+from models.stn_base_model import StnBaseEssentialModel
 from models.stn_controle_model import StnControleModel
+from schemas.stn_base_schema import StnBaseUpdateStatusSC, StnBaseCreateSC
 from schemas.stn_controle_schema import StnControleCreateSC, StnControleUpdateSC, StnControleUpdateStatusDesejadoSC
 
 
@@ -34,8 +35,8 @@ class StnControleCRUDItem(CRUDBase[StnControleModel, StnControleCreateSC, StnCon
 stn_controle = StnControleCRUDItem(StnControleModel)
 
 
-class StnBaseCRUDItem(CRUDBase[StnBaseModel, StnControleCreateSC, StnControleUpdateSC]):
+class StnBaseCRUDItem(CRUDBase[StnBaseEssentialModel, StnBaseCreateSC, StnBaseUpdateStatusSC]):
     pass
 
 
-stn_base = StnBaseCRUDItem(StnControleModel)
+stn_base_essential = StnBaseCRUDItem(StnBaseEssentialModel)

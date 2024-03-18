@@ -2,14 +2,12 @@ from typing import Any, List, Dict
 import logging
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.encoders import jsonable_encoder
-from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-from core.request import StnHomologRequestClient
-from schemas.stn_controle_schema import StnControleSC
 from api.deps import get_db
-from crud.crud_stn import stn_controle
-from schemas.stn_controle_schema import StnControleCreateSC, StnControleUpdateSC, StnControleUpdateStatusDesejadoSC
+from schemas.stn_controle_schema import StnControleSC
+from crud.crud_stn import stn_controle, stn_base_essential
+from schemas.stn_controle_schema import StnControleCreateSC, StnControleUpdateStatusDesejadoSC
+from schemas.stn_base_schema import StnBaseInDbBaseSC
 
 
 router = APIRouter()
@@ -104,3 +102,17 @@ async def delete_chamado(
         raise HTTPException(status_code=404, detail="Chamado não encontrado")
     controle = stn_controle.remove(db=db, id=id)
     return controle
+
+
+@router.get("/interno/teste", response_model=List[StnBaseInDbBaseSC],
+            description='Lista todos os casos da tabela que ainda não foram enviados',
+            status_code=status.HTTP_200_OK,
+            )
+async def read_chamados(
+        db: Session = Depends(get_db)
+) -> Any:
+    """
+    Retrieve controle.
+    """
+    logger.info("Consultando chamados")
+    return stn_base_essential.get_multi_filter(db=db, filterby='status', filter='NOVA')
