@@ -3,7 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from core.config import settings
 from crud.crud_stn import stn_controle, stn_base_essential
-from models.stn_base_model import StnBaseEssentialModel
+from models.stn.stn_base_model import StnBaseEssentialModel
 from schemas.stn_base_schema import StnBaseInDbBaseSC
 from schemas.stn_controle_schema import StnControleCreateSC
 from sqlalchemy.orm import Session
@@ -39,6 +39,9 @@ def stn_insere_chamados_no_controle(db: Session, casos_novos: list[StnBaseEssent
 
 
 def stn_consulta_base():
+    '''
+    Consulto todos os casos que são para colocar em campo
+    '''
     session = cria_instancia_banco()
 
     casos_novos: list[StnBaseInDbBaseSC] = stn_base_essential.get_multi_filter_status(

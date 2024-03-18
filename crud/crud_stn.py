@@ -3,8 +3,8 @@ from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from crud.base import CRUDBase
-from models.stn_base_model import StnBaseEssentialModel
-from models.stn_controle_model import StnControleModel
+from models.stn.stn_base_model import StnBaseEssentialModel
+from models.stn.stn_controle_model import StnControleModel
 from schemas.stn_base_schema import StnBaseUpdateStatusSC, StnBaseCreateSC
 from schemas.stn_controle_schema import StnControleCreateSC, StnControleUpdateSC, StnControleUpdateStatusDesejadoSC
 
